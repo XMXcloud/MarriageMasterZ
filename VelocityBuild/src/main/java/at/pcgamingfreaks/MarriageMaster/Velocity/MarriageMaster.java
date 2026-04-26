@@ -59,13 +59,13 @@ public class MarriageMaster implements MarriageMasterPlugin {
     public void onProxyInitialization(ProxyInitializeEvent event) {
         logger.info("Initializing MarriageMaster for Velocity...");
 
+        initializeMessageSystem();
+
         config = new Config(this, dataFolder);
         if (!config.load()) {
             logger.error("Failed to load config!");
             return;
         }
-
-        initializeMessageSystem();
 
         language = new Language(this, dataFolder);
         if (!language.load(config)) {
@@ -175,27 +175,17 @@ public class MarriageMaster implements MarriageMasterPlugin {
 
     private void initializeMessageSystem() {
         try {
-            // Load SQLite driver
-            try {
-                Class.forName("org.sqlite.JDBC");
-            } catch (Exception e) {
-                // logger.error("Failed to load SQLite driver manually", e);
-            }
-
             // Initialize Message system via reflection
+            Class<?> messageClass = Class.forName("at.pcgamingfreaks.Message.Message");
             try {
-                java.lang.reflect.Field field = at.pcgamingfreaks.Message.Message.class.getDeclaredField("MESSAGE_BUILDER_CONSTRUCTOR");
+                java.lang.reflect.Field field = messageClass.getDeclaredField("MESSAGE_BUILDER_CONSTRUCTOR");
                 field.setAccessible(true);
-                field.set(null, at.pcgamingfreaks.MarriageMaster.Velocity.Database.VelocityMessageBuilder.class.getConstructor(String.class));
-            } catch (Exception ignored) {}
-            
-            try {
-                java.lang.reflect.Method setCompClass = at.pcgamingfreaks.Message.Message.class.getDeclaredMethod("setMessageComponentClass", java.lang.reflect.Constructor.class);
-                setCompClass.setAccessible(true);
-                setCompClass.invoke(null, at.pcgamingfreaks.MarriageMaster.Velocity.Database.VelocityMessageBuilder.class.getConstructor(at.pcgamingfreaks.Message.MessageComponent.class));
-            } catch (Exception ignored) {}
-        } catch (Exception e) {
-            logger.error("Failed to initialize message system", e);
+                field.set(null, at.pcgamingfreaks.MarriageMaster.Velocity.Database.VelocityMessageBuilder.class.getConstructor());
+            } catch (Exception e) {
+                logger.warn("Failed to set MESSAGE_BUILDER_CONSTRUCTOR: " + e.getMessage());
+            }
+        } catch (Throwable e) {
+            logger.error("Failed to initialize message system! This might cause issues with messages.", e);
         }
     }
 }

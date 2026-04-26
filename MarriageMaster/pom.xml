@@ -79,11 +79,11 @@
 			<version>${revision}</version>
 		</dependency>
 		<!-- PCGF Plugin Lib -->
-		<!-- <dependency>
+		<dependency>
 			<groupId>at.pcgamingfreaks</groupId>
 			<artifactId>PluginLib</artifactId>
 			<version>${pcgfPluginLibVersion}</version>
-		</dependency> -->
+		</dependency>
 		<!-- BadRabbit -->
 		<!-- <dependency>
 			<groupId>at.pcgamingfreaks</groupId>

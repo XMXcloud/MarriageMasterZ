@@ -80,6 +80,10 @@
             <id>velocity</id>
             <url>https://repo.papermc.io/repository/maven-public/</url>
         </repository>
+        <repository>
+            <id>pcgf-repo</id>
+            <url>https://repo.pcgamingfreaks.at/repository/maven-everything/</url>
+        </repository>
     </repositories>
 
     <build>
