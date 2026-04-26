@@ -23,6 +23,7 @@
 		<soft-dependencies-bungee/>
 		<bukkitMainClass>${project.groupId}.${project.artifactId}.Bukkit.${project.artifactId}</bukkitMainClass>
 		<bungeeMainClass>${project.groupId}.${project.artifactId}.Bungee.${project.artifactId}</bungeeMainClass>
+		<velocityMainClass>${project.groupId}.${project.artifactId}.Velocity.${project.artifactId}</velocityMainClass>
 		<releaseType>Normal</releaseType>
 		<updateChannel>Release</updateChannel>
 	</properties>
@@ -54,6 +55,11 @@
 		</dependency>
 		<dependency>
 			<groupId>at.pcgamingfreaks</groupId>
+			<artifactId>MarriageMaster-API-Velocity</artifactId>
+			<version>${revision}</version>
+		</dependency>
+		<!-- <dependency>
+			<groupId>at.pcgamingfreaks</groupId>
 			<artifactId>MarriageMaster-BackpackIntegration</artifactId>
 			<version>${revision}</version>
 		</dependency>
@@ -66,20 +72,20 @@
 			<groupId>at.pcgamingfreaks</groupId>
 			<artifactId>MarriageMaster-MinepacksV1</artifactId>
 			<version>${revision}</version>
-		</dependency>
+		</dependency> -->
 		<dependency>
 			<groupId>at.pcgamingfreaks</groupId>
 			<artifactId>MarriageMaster-MagicValues</artifactId>
 			<version>${revision}</version>
 		</dependency>
 		<!-- PCGF Plugin Lib -->
-		<dependency>
+		<!-- <dependency>
 			<groupId>at.pcgamingfreaks</groupId>
 			<artifactId>PluginLib</artifactId>
 			<version>${pcgfPluginLibVersion}</version>
-		</dependency>
+		</dependency> -->
 		<!-- BadRabbit -->
-		<dependency>
+		<!-- <dependency>
 			<groupId>at.pcgamingfreaks</groupId>
 			<artifactId>BadRabbit-Bukkit</artifactId>
 			<version>1.11</version>
@@ -88,23 +94,30 @@
 			<groupId>at.pcgamingfreaks</groupId>
 			<artifactId>BadRabbit-Bungee</artifactId>
 			<version>1.11</version>
-		</dependency>
+		</dependency> -->
 		<!-- Bukkit -->
-		<dependency>
+		<!-- <dependency>
 			<groupId>org.bukkit</groupId>
 			<artifactId>bukkit</artifactId>
 			<version>${bukkitVersion}</version>
 			<scope>provided</scope>
-		</dependency>
+		</dependency> -->
 		<!-- Bungee -->
-		<dependency>
+		<!-- <dependency>
 			<groupId>net.md-5</groupId>
 			<artifactId>bungeecord-api</artifactId>
 			<version>${bungeeVersion}</version>
 			<scope>provided</scope>
+		</dependency> -->
+		<!-- Velocity -->
+		<dependency>
+			<groupId>com.velocitypowered</groupId>
+			<artifactId>velocity-api</artifactId>
+			<version>${velocityVersion}</version>
+			<scope>provided</scope>
 		</dependency>
 		<!-- Vault -->
-		<dependency>
+		<!-- <dependency>
 			<groupId>net.milkbowl.vault</groupId>
 			<artifactId>VaultAPI</artifactId>
 			<version>1.7</version>
@@ -115,16 +128,16 @@
 					<artifactId>bukkit</artifactId>
 				</exclusion>
 			</exclusions>
-		</dependency>
+		</dependency> -->
 		<!-- SkillAPI -->
-		<dependency>
+		<!-- <dependency>
 			<groupId>com.sucy</groupId>
 			<artifactId>SkillAPI</artifactId>
 			<version>3.108</version>
 			<scope>provided</scope>
-		</dependency>
+		</dependency> -->
 		<!-- mcMMO -->
-		<dependency>
+		<!-- <dependency>
 			<groupId>com.gmail.nossr50.mcMMO</groupId>
 			<artifactId>mcMMO</artifactId>
 			<version>2.1.200</version>
@@ -139,21 +152,21 @@
 					<artifactId>worldguard-legacy</artifactId>
 				</exclusion>
 			</exclusions>
-		</dependency>
+		</dependency> -->
 		<!-- AuraSkills -->
-		<dependency>
+		<!-- <dependency>
 			<groupId>dev.aurelium</groupId>
 			<artifactId>auraskills-api-bukkit</artifactId>
 			<version>2.2.4</version>
 			<scope>provided</scope>
-		</dependency>
+		</dependency> -->
 		<!-- Jobs -->
-		<dependency>
+		<!-- <dependency>
 			<groupId>com.github.Zrips</groupId>
 			<artifactId>Jobs</artifactId>
 			<version>5.2.6.4</version>
 			<scope>provided</scope>
-		</dependency>
+		</dependency> -->
 		<!-- region unit test dependencies -->
 		<!-- region JUnit 5 -->
 		<dependency>

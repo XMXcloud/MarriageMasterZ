@@ -63,8 +63,9 @@
 	
 	<modules>
 		<module>MarriageMaster-API-Common</module>
-		<module>MarriageMaster-API-Bukkit</module>
-		<module>MarriageMaster-API-Bungee</module>
+		<!-- <module>MarriageMaster-API-Bukkit</module>
+		<module>MarriageMaster-API-Bungee</module> -->
+		<module>MarriageMaster-API-Velocity</module>
 		<module>MarriageMaster-API</module>
 	</modules>
 </project>

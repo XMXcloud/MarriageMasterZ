@@ -1,0 +1,236 @@
+/*
+ *   Copyright (C) 2022 GeorgH93
+ *
+ *   This program is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.
+ *
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+
+package at.pcgamingfreaks.MarriageMaster.Database;
+
+import at.pcgamingfreaks.MarriageMaster.API.Home;
+import at.pcgamingfreaks.MarriageMaster.API.Marriage;
+import at.pcgamingfreaks.MarriageMaster.API.MarriagePlayer;
+import at.pcgamingfreaks.MarriageMaster.MagicValues;
+import at.pcgamingfreaks.Message.MessageColor;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import lombok.Getter;
+import lombok.Setter;
+
+import java.util.Date;
+
+public abstract class MarriageDataBase<MARRIAGE_PLAYER extends MarriagePlayer, COMMAND_SENDER, HOME extends Home> implements Marriage<MARRIAGE_PLAYER, COMMAND_SENDER, HOME>, DatabaseElement
+{
+	private final MARRIAGE_PLAYER player1, player2;
+	private final MARRIAGE_PLAYER priest;
+	private final int hash;
+	private final Date weddingDate;
+	protected String surname;
+	@NotNull private String chatPrefix;
+	private HOME home;
+	private boolean pvpEnabled;
+	@NotNull private MessageColor color;
+	private Object databaseKey;
+
+	public MARRIAGE_PLAYER getPriest() { return priest; }
+	public String getSurname() { return surname; }
+	public @NotNull String getChatPrefix() { return chatPrefix; }
+	public HOME getHome() { return home; }
+	public @NotNull MessageColor getColor() { return color; }
+	public Object getDatabaseKey() { return databaseKey; }
+	public void setDatabaseKey(Object databaseKey) { this.databaseKey = databaseKey; }
+
+
+	//region Constructors
+	protected MarriageDataBase(final @NotNull MARRIAGE_PLAYER player1, final @NotNull MARRIAGE_PLAYER player2, final @Nullable MARRIAGE_PLAYER priest, final @NotNull Date weddingDate, final @Nullable String surname,
+	                        final boolean pvpEnabled, final @Nullable MessageColor color, final @Nullable HOME home, final @Nullable Object databaseKey)
+	{
+		this.player1 = player1;
+		this.player2 = player2;
+		this.priest  = priest;
+		this.surname = surname;
+		this.pvpEnabled = pvpEnabled;
+		this.weddingDate = (Date) weddingDate.clone();
+		this.databaseKey = databaseKey;
+		this.home = home;
+		this.chatPrefix = ""; // TODO implement in db
+		if(player1 instanceof MarriagePlayerDataBase && player2 instanceof MarriagePlayerDataBase)
+		{
+			((MarriagePlayerDataBase) player1).addMarriage(this);
+			((MarriagePlayerDataBase) player2).addMarriage(this);
+		}
+		this.hash = player1.hashCode() * 53 + player2.hashCode();
+		this.color = (color == null) ? MessageColor.values()[hash & 0x0F] : color;
+	}
+
+	protected MarriageDataBase(final @NotNull MARRIAGE_PLAYER player1, final @NotNull MARRIAGE_PLAYER player2, final @Nullable MARRIAGE_PLAYER priest, final @NotNull Date weddingDate, final @Nullable String surname)
+	{
+		this(player1, player2, priest, weddingDate, surname, false, null, null, null);
+	}
+
+	protected MarriageDataBase(final @NotNull MARRIAGE_PLAYER player1, final @NotNull MARRIAGE_PLAYER player2, final @Nullable MARRIAGE_PLAYER priest, final @Nullable String surname)
+	{
+		this(player1, player2, priest, new Date(), surname);
+	}
+	//endregion
+
+	@Override
+	public boolean equals(Object otherMarriage)
+	{
+		return otherMarriage instanceof MarriageDataBase && player1.equals(((MarriageDataBase) otherMarriage).player1) && player2.equals(((MarriageDataBase) otherMarriage).player2);
+	}
+
+	@Override
+	public int hashCode()
+	{
+		return hash;
+	}
+
+	//region data setter
+	public void setHomeData(HOME home)
+	{
+		this.home = home;
+	}
+
+	public void updateSurname(String surname)
+	{
+		String oldSurname = getSurname();
+		this.surname = surname;
+		BaseDatabase.getInstance().cachedSurnameUpdate(this, oldSurname, false);
+	}
+
+	public void updatePvPState(boolean newState)
+	{
+		pvpEnabled = newState;
+	}
+
+	public void updateDivorce()
+	{
+		((MarriagePlayerDataBase) getPartner1()).removeMarriage(this);
+		((MarriagePlayerDataBase) getPartner2()).removeMarriage(this);
+	}
+	//endregion
+
+	//region API Functions
+	@Override
+	public @NotNull MARRIAGE_PLAYER getPartner1()
+	{
+		return player1;
+	}
+
+	@Override
+	public @NotNull MARRIAGE_PLAYER getPartner2()
+	{
+		return player2;
+	}
+
+	@Override
+	public boolean isBothOnline()
+	{
+		return player1.isOnline() && player2.isOnline();
+	}
+
+	@Override
+	public @Nullable MARRIAGE_PLAYER getPartner(@NotNull MarriagePlayer player)
+	{
+		if (player1.equals(player))
+		{
+			return player2;
+		}
+		else if (player2.equals(player))
+		{
+			return player1;
+		}
+		return null;
+	}
+
+	@Override
+	public boolean isHomeSet()
+	{
+		return getHome() != null;
+	}
+
+	@Override
+	public void setHome(HOME home)
+	{
+		this.home = home;
+		BaseDatabase.getInstance().updateHome(this);
+	}
+
+	@Override
+	public @NotNull Date getWeddingDate()
+	{
+		return (Date) weddingDate.clone();
+	}
+
+	@Override
+	public boolean isPVPEnabled()
+	{
+		return pvpEnabled;
+	}
+
+	@Override
+	public void setPVPEnabled(boolean pvpEnabled)
+	{
+		this.pvpEnabled = pvpEnabled;
+		BaseDatabase.getInstance().updatePvPState(this);
+	}
+
+	@Override
+	public void setColor(@Nullable MessageColor color)
+	{
+		updateColor(color);
+		BaseDatabase.getInstance().updateMarriageColor(this);
+	}
+
+	@Override
+	public @NotNull String getMagicHeart()
+	{
+		return getColor() + MagicValues.HEART_AND_RESET;
+	}
+
+	public void updateColor(@Nullable MessageColor color)
+	{
+		if(color == null || MessageColor.RESET.equals(color)) color = MessageColor.values()[hash & 0x0F];
+		else if(color.isRGB()) color = color.getFallbackColor();
+		this.color = color;
+	}
+
+	@Override
+	public boolean hasPlayer(@NotNull MARRIAGE_PLAYER player)
+	{
+		return getPartner1().equals(player) || getPartner2().equals(player);
+	}
+
+	@Override
+	public @NotNull String getMarriageChatMessagePrefix()
+	{
+		return chatPrefix;
+	}
+
+	@Override
+	public void setMarriageChatMessagePrefix(@NotNull String chatPrefix)
+	{
+		this.chatPrefix = chatPrefix.substring(0, Math.min(20, chatPrefix.length()));
+	}
+
+	@Override
+	public void divorce()
+	{
+		updateDivorce();
+		BaseDatabase.getInstance().cachedDivorce(this);
+	}
+	//endregion
+}

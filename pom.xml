@@ -11,6 +11,7 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<bukkitVersion>1.15.2-R0.1-SNAPSHOT</bukkitVersion>
 		<bungeeVersion>1.21-R0.2</bungeeVersion>
+		<velocityVersion>3.3.0-SNAPSHOT</velocityVersion>
 		<pcgfPluginLibVersion>1.0.40.7-SNAPSHOT</pcgfPluginLibVersion>
 		<mockito.version>5.11.0</mockito.version>
 		<mavenShade.version>3.6.2</mavenShade.version>
@@ -59,6 +60,10 @@
 			<id>spigot-nexus</id>
 			<url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
 		</repository>
+		<repository>
+			<id>papermc</id>
+			<url>https://repo.papermc.io/repository/maven-public/</url>
+		</repository>
 	</repositories>
 
 	<dependencies>
@@ -92,6 +97,11 @@
 							<groupId>org.projectlombok</groupId>
 							<artifactId>lombok</artifactId>
 							<version>${lombok.version}</version>
+						</path>
+						<path>
+							<groupId>com.velocitypowered</groupId>
+							<artifactId>velocity-api</artifactId>
+							<version>${velocityVersion}</version>
 						</path>
 					</annotationProcessorPaths>
 				</configuration>
@@ -152,9 +162,9 @@
 
 	<modules>
 		<module>API</module>
-		<module>Extensions/MarriageMaster-BackpackIntegration</module>
+		<!-- <module>Extensions/MarriageMaster-BackpackIntegration</module>
 		<module>Extensions/MarriageMaster-MinepacksV1</module>
-		<module>Extensions/MarriageMaster-MinepacksV2</module>
+		<module>Extensions/MarriageMaster-MinepacksV2</module> -->
 		<module>Components/MarriageMaster-MagicValues</module>
 		<module>MarriageMaster</module>
 	</modules>
